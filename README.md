@@ -22,9 +22,9 @@ _python3 btc.py_
 
 If you would like toiio compile to a single binary:
 
-__pip3 install pyinstaller__
+_pip3 install pyinstaller_
 
-__pyinstaller --distpath=../dist --onefile btc.py__
+_pyinstaller --distpath=../dist --onefile btc.py_
 
 This will generate a single executable bundle in a dist folder at the root of the project.
 
