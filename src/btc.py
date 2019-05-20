@@ -33,6 +33,7 @@ class BtcWidget(Widget):
     
     marketData = {}
     currentKey = 0
+    cryptoLogo = {'src': ''}
             
     def getPrice(self, dt=False):
         

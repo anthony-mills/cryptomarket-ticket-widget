@@ -14,11 +14,19 @@ Install the requirements with PIP
 
 _cd src/_
 
-_pip install -r requirements.txt_
+_pip3 install -r requirements.txt_
 
 Then simply run using Python3
 
 _python3 btc.py_
+
+If you would like toiio compile to a single binary:
+
+__pip3 install pyinstaller__
+
+__pyinstaller --distpath=../dist --onefile btc.py__
+
+This will generate a single executable bundle in a dist folder at the root of the project.
 
 ### Data Sources
 
