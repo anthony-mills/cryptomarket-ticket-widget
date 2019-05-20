@@ -1,3 +1,4 @@
+pygame==1.9.6
 cython==0.28.2
 requests>=2.20.0
 kivy==1.10.1
