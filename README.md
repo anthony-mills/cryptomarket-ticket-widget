@@ -8,6 +8,17 @@ Simple desktop ticker built with [Kivy](https://kivy.org/) and [Python](https://
 
 ![ETH Price](/screenshots/eth.png?raw=true "Ethereum")
 
+### Usage 
+
+Install the requirements with PIP
+
+_cd src/_
+
+_pip install -r requirements.txt_
+
+Then simply run using Python3
+
+_python3 btc.py_
 
 ### Data Sources
 
