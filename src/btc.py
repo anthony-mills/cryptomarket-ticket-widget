@@ -1,3 +1,6 @@
+"""
+Crypto Market Ticker
+"""
 import requests
 
 # import Kivy Specific Modules
@@ -9,19 +12,19 @@ from kivy.core.window import Window
 Window.size = (420, 200)
 
 # API url to get data from ( see https://messari.io/api for more details )
-apiUrl = "https://data.messari.io/api/v1/assets/bitcoin/metrics"
+API_URL = "https://data.messari.io/api/v1/assets/bitcoin/metrics"
 
 # Data request interval in seconds
-updateData = 120
+UPDATE_DATA = 120
 
 # Time to show each currency in seconds
-displayCurrency = 10
+DISPLAY_CURRENCY = 10
 
 class BtcWidget(Widget):
     """
     Display current BTC market conditions
     """
-    cryptoDict = DictProperty(
+    crypto_dict = DictProperty(
         {
             'name': '',
             'price': '',
@@ -30,61 +33,73 @@ class BtcWidget(Widget):
         }
     )
 
-    marketData = {}
-    currentKey = 0
-    cryptoLogo = {'src': ''}
+    market_data = {}
+    current_key = 0
+    crypto_logo = {'src': ''}
 
-    def getPrice(self):
+    def get_price(self, dt=False):
+        """
+        Poll the API endpoint for market data
+        """
+        request = requests.get(API_URL)
+        self.market_data = request.json()
 
-        request = requests.get(apiUrl)
-        self.marketData = request.json()
+    def format_data(self, dt=False):
+        """
+        Format API data for presentation in the widget
+        """
+        currency_dets = self.market_data['data']
 
-    def formatData(self, dt=False):
-        currencyDets = self.marketData['data']
-
-        if float(currencyDets['market_data']['price_usd']) > 1:
-            cryptoPrice = round(float(currencyDets['market_data']['price_usd']),2)
+        if float(currency_dets['market_data']['price_usd']) > 1:
+            crypto_price = round(float(currency_dets['market_data']['price_usd']), 2)
         else:
-            cryptoPrice = round(float(currencyDets['market_data']['price_usd']), 4)
+            crypto_price = round(float(currency_dets['market_data']['price_usd']), 4)
 
-        self.cryptoLogo.source = './logos/' + currencyDets['symbol'] + '.png'
-        self.cryptoDict['name'] = currencyDets['name']
-        self.cryptoDict['price'] = '$' + str(cryptoPrice) + ' USD'
+        self.crypto_logo.source = './logos/' + currency_dets['symbol'] + '.png'
+        self.crypto_dict['name'] = currency_dets['name']
+        self.crypto_dict['price'] = '$' + str(crypto_price) + ' USD'
 
-        if float(currencyDets['market_data']['percent_change_usd_last_24_hours']) > 0:
-            priceChange = '[color=18ff06]' + str(currencyDets['market_data']['percent_change_usd_last_24_hours']) + '[/color]'
+        if float(currency_dets['market_data']['percent_change_usd_last_24_hours']) > 0:
+            price_change = '[color=18ff06]'+\
+                            str(currency_dets['market_data']['percent_change_usd_last_24_hours'])+\
+                            '[/color]'
         else:
-            priceChange = '[color=fd1e22]' + str(urrencyDets['market_data']['percent_change_usd_last_24_hours']) + '[/color]'
+            price_change = '[color=fd1e22]' +\
+                            str(currency_dets['market_data']['percent_change_usd_last_24_hours'])+\
+                            '[/color]'
 
-        self.cryptoDict['change'] = '24h Price Change: ' + priceChange + '%'
+        self.crypto_dict['change'] = '24h Price Change: ' + price_change + '%'
 
-        currencyVol = round(float(currencyDets['market_data']['real_volume_last_24_hours']))
-        self.cryptoDict['volume'] = '24 Hour Volume: $' + str(currencyVol) + ' USD'
+        currency_vol = round(float(currency_dets['market_data']['real_volume_last_24_hours']))
+        self.crypto_dict['volume'] = '24 Hour Volume: $' + str(currency_vol) + ' USD'
 
-        if self.currentKey < 4:
-            self.currentKey += 1
+        if self.current_key < 4:
+            self.current_key += 1
         else:
-            self.currentKey = 0
+            self.current_key = 0
 
 
 class BtcApp(App):
+    """
+    Create widget and display market data
 
+    @param object
+    """
     def build(self):
         self.title = 'Crypto Market Data'
-        btcWidget = BtcWidget()
+        btc_widget_obj = BtcWidget()
 
         # Get the market data
-        btcWidget.getPrice()
+        btc_widget_obj.get_price()
 
         # Format and display the data in widget
-        btcWidget.formatData()
+        btc_widget_obj.format_data()
 
         # Set clock events to periodically get fresh market data and change the currency shown
-        Clock.schedule_interval(btcWidget.formatData, displayCurrency)
-        Clock.schedule_interval(btcWidget.getPrice, updateData)
+        Clock.schedule_interval(btc_widget_obj.format_data, DISPLAY_CURRENCY)
+        Clock.schedule_interval(btc_widget_obj.get_price, UPDATE_DATA)
 
-        return btcWidget
-
+        return btc_widget_obj
 
 if __name__ == '__main__':
     BtcApp().run()
