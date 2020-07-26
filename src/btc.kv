@@ -1,7 +1,7 @@
 #:kivy 1.0.9
 
 <BtcWidget>:
-    cryptoLogo: cryptoLogo
+    crypto_logo: crypto_logo
     spacing: 10
     padding: 10
     canvas.before:
@@ -18,24 +18,24 @@
         Label:
             font_size: 40  
             center_x: root.width * 1/2
-            text: root.cryptoDict['name']
+            text: root.crypto_dict['name']
             color: 1,1,1,1        
                     
         Label:
             font_size: 20  
             center_x: root.width * 1/2
-            text: root.cryptoDict['price']
+            text: root.crypto_dict['price']
               
         Image:
-            id: cryptoLogo   
+            id: crypto_logo   
 
         Label:
             font_size: 20  
             center_x: root.width * 1/2
-            text: root.cryptoDict['change']
+            text: root.crypto_dict['change']
             markup: True
             
         Label:
             font_size: 20  
             center_x: root.width * 1/2
-            text: root.cryptoDict['volume']
+            text: root.crypto_dict['volume']
